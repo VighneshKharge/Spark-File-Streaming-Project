@@ -45,12 +45,6 @@ spark = SparkSession.builder \
     .appName("HDFSFileStreaming") \
     .getOrCreate()
 
-# spark = SparkSession.builder \
-#   .appName("Write to S3 Example") \
-#   .config("spark.hadoop.fs.s3a.access.key", "AKIA2U3TXUVMACK7E7FL") \
-#   .config("spark.hadoop.fs.s3a.secret.key", "vEyHqgUy9NrogEx77oRBaL55BoX7Y0/2xVWh8vdd") \
-#   .config("spark.hadoop.fs.s3a.endpoint", "https://s3.console.aws.amazon.com/s3/buckets/my-bucket-28may?region=ap-south-1&tab=objects") \
-#   .getOrCreate()
 
 # Read files from the HDFS directory
 streaming_df = spark.readStream \
@@ -64,7 +58,7 @@ explodeDF = streaming_df.selectExpr("InvoiceNumber", "CreatedTime","StoreID", \
                                     "DeliveryAddress.PinCode","explode(InvoiceLineItems) as LineItem")
 
 ## Here we are renaming that columns which are within InvoiceLineItems columns and dropping the orginal InvoiceLineItems column
-flattenDF = explodeDF \
+Extarct_LineItem = explodeDF \
                 .withColumn("ItemCode", expr("LineItem.ItemCode")) \
                 .withColumn("ItemDescription", expr("LineItem.ItemDescription")) \
                 .withColumn("ItemPrice", expr("LineItem.ItemPrice")) \
@@ -74,13 +68,13 @@ flattenDF = explodeDF \
 
 
 # Write the transformed data to 2 hdfs folders
-query1 = flattenDF.writeStream \
+query1 = Extarct_LineItem.writeStream \
     .format("csv") \
     .option("header",True) \
     .option("path", output_path) \
     .option("checkpointLocation", "hdfs://localhost:9000/user/ubh01/checkpoint1/") \
     .start() 
-query2 = flattenDF.writeStream \
+query2 = Extarct_LineItem.writeStream \
     .format("csv") \
     .option('header',True) \
     .option("path", output_path2) \
