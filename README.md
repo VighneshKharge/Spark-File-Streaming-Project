@@ -19,7 +19,7 @@ hadoop fs -put file_name /hdfs_path/json_data
 
 **Step 3:**
 
-Monitoring raw directory using the spark s & converting nested json data into simple per product invoice josn data & writing it to  CSV format then  sending to 'to_hive' and 'to_cassandra' directories on hdfs 
+Monitoring josn_data  directory using the spark s & converting nested json data into simple per product invoice josn data & writing it to  CSV format then  sending to 'to_hive' and 'to_cassandra' directories on hdfs 
 
 from the 'to_hive' directory this data can be used for creating a table & then querying the data
 
