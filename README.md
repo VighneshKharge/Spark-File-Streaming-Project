@@ -54,11 +54,25 @@ Received e-commerce invoice data is having a nested structure so, while creating
 
 **Phase 2**
 
+**Before running this DAG upload the given .jar file in spark's  jar folder.**
+
 - From the 'to_cassandra' directory sending CSV data to the Cassandra table and to the s3 bucket on AWS creating a DAG in Apache Airflow.
 
 - Apache Airflow is a task scheduler tool. Where we can deploy a DAG (Directed Acyclic Graph) which when triggered will execute tasks. 
 
 - 1st create cassandra keyspace  & table. Please refer to 'Cassandra commands.txt'.
+
+- Using Apache Airflow 4 tasks are executed
+  
+1-  Deleting the '_spark_metadata' file when executing the 'HDFS_Monitor.py' spark job will create a metadata file.
+
+2- Sending CSV file from the 'to_cassandra' directory to Cassandra table. Refer to the 'hdfs-cassandra.py' file.
+
+3- Sending CSV file from  the 'to_cassandra' directory to the S3 bucket. Refer to the 'hdfs=s3.py' file.
+
+4- Deleting CSV file from the 'to_cassandra' directory.
+
+- All above tasks are scheduled in the 'Project_DAG_Arflow.py' file & are executed in Apache Airflow.
 
  
 
